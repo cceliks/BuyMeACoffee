@@ -5,6 +5,11 @@ import {PriceConvertor} from "./PriceConvertor.sol";
 import {Ownable} from "openzeppelin-contracts/contracts/access/Ownable.sol";
 
 contract BuyMeACoffee is Ownable {
+    error MinimumUSDNotMet();
+
+    event Funded(address indexed funder, uint256 amount);
+    event Withdrawn(uint256 amount);
+
     using PriceConvertor for uint256;
 
     mapping(address => uint256) public addressToAmountFunded;
@@ -14,11 +19,6 @@ contract BuyMeACoffee is Ownable {
     constructor(uint256 _minimumUSD) Ownable() {
         i_minimumUSD = _minimumUSD * 1e18;
     }
-
-    event Funded(address indexed funder, uint256 amount);
-    event Withdrawn(uint256 amount);
-
-    error MinimumUSDNotMet();
 
     modifier checkMinimumUSD() {
         if (msg.value.getConversionRate() < i_minimumUSD) {
