@@ -34,6 +34,12 @@ $ forge snapshot
 $ anvil
 ```
 
+### Deploy
+
+```shell
+$ forge script script/BuyMeACoffee.s.sol:BuyMeACoffeeScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
 ### Help
 
 ```shell
