@@ -47,4 +47,11 @@ contract BuyMeACoffee is Ownable {
 
         emit Withdrawn(amount);
     }
+
+    receive() external payable {
+        fund();
+    }
+    fallback() external payable {
+        fund();
+    }
 }
