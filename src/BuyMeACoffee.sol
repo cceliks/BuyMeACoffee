@@ -16,7 +16,7 @@ contract BuyMeACoffee is Ownable {
     address[] public funders;
     uint256 public immutable i_minimumUSD;
 
-    constructor(uint256 _minimumUSD) Ownable() {
+    constructor(uint256 _minimumUSD) Ownable(msg.sender) {
         i_minimumUSD = _minimumUSD * 1e18;
     }
 
@@ -51,6 +51,7 @@ contract BuyMeACoffee is Ownable {
     receive() external payable {
         fund();
     }
+
     fallback() external payable {
         fund();
     }
