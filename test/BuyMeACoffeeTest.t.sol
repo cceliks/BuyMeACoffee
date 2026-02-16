@@ -2,16 +2,18 @@
 pragma solidity ^0.8.13;
 
 import {BuyMeACoffee} from "../src/BuyMeACoffee.sol";
-import {Test} from "forge-std/Test.sol";
+import {Test, console} from "forge-std/Test.sol";
+import {BuyMeACoffeeScript} from "../script/BuyMeACoffee.s.sol";
 
 contract BuyMeACoffeeTest is Test {
-    address public owner = address(1);
-    address public funder1 = address(2);
-    address public funder2 = address(3);
-    address public funder3 = address(4);
+    address public funder1 = address(1);
+    address public funder2 = address(2);
+    address public funder3 = address(3);
 
     address public priceFeedAddress = 0x694AA1769357215DE4FAC081bf1f309aDC325306;
+
     BuyMeACoffee public buyMeACoffee;
+    BuyMeACoffeeScript script;
 
     event Funded(address indexed funder, uint256 amount);
     event Withdrawn(uint256 amount);
@@ -22,11 +24,10 @@ contract BuyMeACoffeeTest is Test {
         vm.deal(funder2, 10e18);
         vm.deal(funder3, 10e18);
 
-        vm.prank(owner);
         // Initialize the contract with a minimum USD value of 50
-        buyMeACoffee = new BuyMeACoffee(50);
-
-        assertEq(address(owner), buyMeACoffee.owner());
+        script = new BuyMeACoffeeScript();
+        buyMeACoffee = script.run();
+        // buyMeACoffee = new BuyMeACoffee(20, priceFeedAddress);
 
         // Mock the price feed to return 2000 USD per ETH
         bytes memory mockData = abi.encode(uint80(0), int256(200000000000), uint256(0), uint256(0), uint80(0));
@@ -65,12 +66,14 @@ contract BuyMeACoffeeTest is Test {
         vm.expectRevert();
         buyMeACoffee.withdraw();
 
-        vm.prank(owner);
+        uint256 ownerBalanceBefore = msg.sender.balance;
+
+        vm.prank(msg.sender);
         vm.expectEmit();
         emit Withdrawn(7e18);
 
         buyMeACoffee.withdraw();
-        assertEq(owner.balance, 7e18);
+        assertEq(msg.sender.balance - ownerBalanceBefore, 7e18);
         assertEq(address(buyMeACoffee).balance, 0);
 
         assertEq(buyMeACoffee.addressToAmountFunded(funder1), 0);

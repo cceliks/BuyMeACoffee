@@ -30,7 +30,7 @@ contract PriceConvertorTest is Test {
         // getETHPrice() multiplies by 1e10 to convert to 18 decimals
         // Expected: 200000000000 * 1e10 = 2000 * 1e18
         uint256 expectedPrice = 2000 * 1e18;
-        uint256 actualPrice = PriceConvertor.getETHPrice();
+        uint256 actualPrice = PriceConvertor.getETHPrice(0x694AA1769357215DE4FAC081bf1f309aDC325306);
         assertEq(actualPrice, expectedPrice);
     }
 
@@ -38,7 +38,7 @@ contract PriceConvertorTest is Test {
         // 1 ETH should convert to 2000 USD (based on mock price)
         uint256 ethAmount = 1e18;
         uint256 expectedUSD = 2000 * 1e18;
-        uint256 actualUSD = PriceConvertor.getConversionRate(ethAmount);
+        uint256 actualUSD = PriceConvertor.getConversionRate(ethAmount, 0x694AA1769357215DE4FAC081bf1f309aDC325306);
         assertEq(actualUSD, expectedUSD);
     }
 
@@ -46,7 +46,7 @@ contract PriceConvertorTest is Test {
         // 0.5 ETH should convert to 1000 USD
         uint256 ethAmount = 5e17; // 0.5 ETH
         uint256 expectedUSD = 1000 * 1e18;
-        uint256 actualUSD = PriceConvertor.getConversionRate(ethAmount);
+        uint256 actualUSD = PriceConvertor.getConversionRate(ethAmount, 0x694AA1769357215DE4FAC081bf1f309aDC325306);
         assertEq(actualUSD, expectedUSD);
     }
 
@@ -54,13 +54,13 @@ contract PriceConvertorTest is Test {
         // 10 ETH should convert to 20000 USD
         uint256 ethAmount = 10e18;
         uint256 expectedUSD = 20000 * 1e18;
-        uint256 actualUSD = PriceConvertor.getConversionRate(ethAmount);
+        uint256 actualUSD = PriceConvertor.getConversionRate(ethAmount, 0x694AA1769357215DE4FAC081bf1f309aDC325306);
         assertEq(actualUSD, expectedUSD);
     }
 
     function testGetVersion() public view {
         uint256 expectedVersion = 4;
-        uint256 actualVersion = PriceConvertor.getVersion();
+        uint256 actualVersion = PriceConvertor.getVersion(0x694AA1769357215DE4FAC081bf1f309aDC325306);
         assertEq(actualVersion, expectedVersion);
     }
 
@@ -68,7 +68,7 @@ contract PriceConvertorTest is Test {
         // Test the library using "using for" syntax
         uint256 ethAmount = 1e18;
         uint256 expectedUSD = 2000 * 1e18;
-        uint256 actualUSD = ethAmount.getConversionRate();
+        uint256 actualUSD = ethAmount.getConversionRate(0x694AA1769357215DE4FAC081bf1f309aDC325306);
         assertEq(actualUSD, expectedUSD);
     }
 }
